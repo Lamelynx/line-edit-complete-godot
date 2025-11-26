@@ -20,6 +20,10 @@ var complete_menu = preload("res://addons/auto_complete_menu_node/Scenes/complet
 ## you can define the key that is used to access with this.
 @export var terms_dict_key: String = "terms"
 
+## Number of chars that must be inserted before complete menu is shown.
+## If 0 the menu will always be shown
+@export var min_chars_for_suggestions:int = 0
+
 @export_group("Menu Transform Settings")
 @export var margin: float = 0
 @export var size_min: Vector2 = Vector2(100, 0)
@@ -52,12 +56,24 @@ func create_complete_menu(edit: LineEdit):
 	new_menu.set_up_menu(placement_point, direction, location_info[1], location_info[2], edit)
 	insert_terms(new_menu)
 
-	edit.connect("focus_entered", new_menu.show_menu)
-	edit.connect("focus_exited", new_menu.hide_menu)
+	if min_chars_for_suggestions == 0:
+		edit.connect("focus_entered", new_menu.show_menu)
+		edit.connect("focus_exited", new_menu.hide_menu)
+	
+	edit.connect("text_changed", self._on_edit_text_change.bind(new_menu))
+	
 	menu_location_node.connect("resized", new_menu.resize)
 	new_menu.connect("resized", new_menu.resize)
 	
 	new_menu.hide_menu(true)
+
+func _on_edit_text_change(new_text: String, sender) -> void:
+	# Need atleast 3 chars before possible option is shown
+	if new_text.length() >= min_chars_for_suggestions:
+		sender.show()
+	else:
+		sender.hide()
+
 
 func insert_terms(menu: CompleteMenu):
 	var new_terms = terms
