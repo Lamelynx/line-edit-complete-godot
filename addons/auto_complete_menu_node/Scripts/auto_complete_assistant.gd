@@ -20,8 +20,8 @@ var complete_menu = preload("res://addons/auto_complete_menu_node/Scenes/complet
 ## you can define the key that is used to access with this.
 @export var terms_dict_key: String = "terms"
 
-## Number of chars that must be inserted before complete menu is shown.
-## If 0 the menu will always be shown
+## Minimum number of characters that must be entered before the autocomplete menu is displayed.
+## Set to 0 to show the menu immediately, even with no input.
 @export var min_chars_for_suggestions:int = 0
 
 @export_group("Menu Transform Settings")
